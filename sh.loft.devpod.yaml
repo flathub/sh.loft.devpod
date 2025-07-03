@@ -14,37 +14,18 @@ finish-args:
   - --socket=ssh-auth
   - --socket=gpg-agent
   - --filesystem=~/.devpod:create
-  - --filesystem=~/.ssh:create
   - --talk-name=org.kde.StatusNotifierWatcher
   - --talk-name=org.freedesktop.Flatpak
   - --filesystem=xdg-run/keyring
   - --filesystem=xdg-run/tray-icon:create
 
 add-extensions:
-  sh.loft.devpod.editor:
-    directory: editors
-    subdirectories: true
-    version: '24.08'
-    add-ld-path: lib
-    no-autodownload: true
-  sh.loft.devpod.editor.codium:
-    directory: editors/codium
-    version: '24.08'
-    bundle: true
-    no-autodownload: true
-    autodelete: true
   com.visualstudio.code.tool:
     directory: tools
     subdirectories: true
     version: '24.08'
     add-ld-path: lib
     no-autodownload: true
-  com.visualstudio.code.tool.devpod:
-    directory: tools/devpod
-    version: '24.08'
-    bundle: true
-    no-autodownload: true
-    autodelete: true
 
 modules:
   - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
@@ -72,15 +53,14 @@ modules:
     build-commands:
       - ar -x DevPod.deb
       - tar -xf data.tar.gz
-      - install -Dm755 usr/bin/devpod-cli -t /app/tools/devpod/bin
-      - ln -sf /app/tools/devpod/bin/devpod-cli /app/bin/devpod-cli
-      - ln -sf devpod-cli /app/tools/devpod/bin/devpod
+      - install -Dm755 usr/bin/devpod-cli /app/bin/devpod
+      - ln -sf $XDG_RUNTIME_DIR/app/$FLATPAK_ID/bin/devpod-cli /app/bin/devpod-cli
       - install -Dm755 usr/bin/DevPod\ Desktop /app/bin/devpod-desktop
       - cp devpod-wrapper /app/bin/sh.loft.devpod
       - chmod +x /app/bin/sh.loft.devpod
-      - mkdir -p /app/editors/codium/bin
-      - cp codium-wrapper /app/editors/codium/bin/codium
-      - chmod +x /app/editors/codium/bin/codium
+      - mkdir -p /app/editors/bin
+      - cp codium-wrapper /app/editors/bin/codium
+      - chmod +x /app/editors/bin/codium
       - install -Dm644 DevPod.desktop /app/share/applications/sh.loft.devpod.desktop
       - desktop-file-edit --set-key Exec --set-value sh.loft.devpod /app/share/applications/sh.loft.devpod.desktop
       - desktop-file-edit --set-icon sh.loft.devpod /app/share/applications/sh.loft.devpod.desktop
@@ -88,3 +68,4 @@ modules:
       - install -Dm644 usr/share/icons/hicolor/32x32/apps/DevPod\ Desktop.png /app/share/icons/hicolor/32x32/apps/sh.loft.devpod.png
       - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/DevPod\ Desktop.png /app/share/icons/hicolor/256x256/apps/sh.loft.devpod.png
       - install -Dm644 DevPod.metainfo.xml /app/share/metainfo/sh.loft.devpod.metainfo.xml
+      - mkdir -p /app/tools

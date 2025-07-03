@@ -1,5 +1,18 @@
 #!/bin/sh
 
-export PATH=/usr/bin:/app/editors/codium/bin:/app/tools/devpod/bin:/app/tools/podman/bin:/app/bin
+DEVPOD_APP_PATH=$XDG_RUNTIME_DIR/app/sh.loft.devpod
+export PATH=/usr/bin:/app/editors/bin:$DEVPOD_APP_PATH/bin
 
-exec devpod-desktop "$@"
+install -Dm755 /app/bin/devpod $DEVPOD_APP_PATH/bin/devpod-cli
+
+for tool_dir in /app/tools/*; do
+  tool_bindir=$tool_dir/bin
+  if [ -d "$tool_bindir" ]; then
+    echo "Adding $tool_bindir to PATH"
+    export PATH=$PATH:$tool_bindir
+  fi
+done
+
+export PATH=$PATH:/app/bin
+
+/app/bin/devpod-desktop "$@"
