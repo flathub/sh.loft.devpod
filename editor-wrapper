@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Get the base name of the script (which will be the symlink name if invoked via symlink)
+script_name=$(basename "$0")
+editor=""
+
+case "$script_name" in
+    "codium")
+        editor="com.vscodium.codium"
+        ;;
+    "code")
+        editor="com.visualstudio.code"
+        ;;
+    *)
+        echo "Unsupported editor $script_name"
+        exit 1
+        ;;
+esac
+
+exec flatpak-spawn --host flatpak run $editor "$@"

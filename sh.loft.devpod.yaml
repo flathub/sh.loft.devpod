@@ -16,6 +16,7 @@ finish-args:
   - --filesystem=~/.devpod:create
   - --talk-name=org.kde.StatusNotifierWatcher
   - --talk-name=org.freedesktop.Flatpak
+  - --filesystem=xdg-run/podman:create
   - --filesystem=xdg-run/keyring
   - --filesystem=xdg-run/tray-icon:create
 
@@ -49,7 +50,7 @@ modules:
       - type: file
         path: devpod-wrapper
       - type: file
-        path: codium-wrapper
+        path: editor-wrapper
     build-commands:
       - ar -x DevPod.deb
       - tar -xf data.tar.gz
@@ -59,8 +60,10 @@ modules:
       - cp devpod-wrapper /app/bin/sh.loft.devpod
       - chmod +x /app/bin/sh.loft.devpod
       - mkdir -p /app/editors/bin
-      - cp codium-wrapper /app/editors/bin/codium
-      - chmod +x /app/editors/bin/codium
+      - cp editor-wrapper /app/editors/bin/editor-wrapper
+      - chmod +x /app/editors/bin/editor-wrapper
+      - ln -sf editor-wrapper /app/editors/bin/codium
+      - ln -sf editor-wrapper /app/editors/bin/code
       - install -Dm644 DevPod.desktop /app/share/applications/sh.loft.devpod.desktop
       - desktop-file-edit --set-key Exec --set-value sh.loft.devpod /app/share/applications/sh.loft.devpod.desktop
       - desktop-file-edit --set-icon sh.loft.devpod /app/share/applications/sh.loft.devpod.desktop
