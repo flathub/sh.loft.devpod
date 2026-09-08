@@ -1,3 +1,4 @@
 {
-  "only-arches": ["x86_64"]
+  "only-arches": ["x86_64"],
+  "end-of-life": "This flatpak is no longer maintained."
 }
